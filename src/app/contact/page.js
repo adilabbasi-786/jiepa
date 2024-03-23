@@ -4,7 +4,7 @@ import TopBar from "../../components/TopBar";
 import React from "react";
 import { BsFillTelephoneFill } from "react-icons/bs";
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <TopBar />
@@ -102,4 +102,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

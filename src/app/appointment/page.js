@@ -5,7 +5,7 @@ import TopBar from "../../components/TopBar";
 import React, { useState } from "react";
 import { SupabaseAdmin } from "../lib/supabase";
 import { format } from "date-fns";
-const page = () => {
+const Page = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
@@ -149,4 +149,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

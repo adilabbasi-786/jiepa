@@ -10,7 +10,7 @@ import user from "../images/blog-3.jpg";
 import { FaAngleRight } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa";
-const page = () => {
+const Page = () => {
   return (
     <>
       <TopBar />
@@ -427,4 +427,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

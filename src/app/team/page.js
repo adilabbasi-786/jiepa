@@ -4,7 +4,7 @@ import Teams from "../../components/Teams";
 import TopBar from "../../components/TopBar";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <TopBar />
@@ -15,4 +15,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
