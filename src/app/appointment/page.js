@@ -14,20 +14,47 @@ const page = () => {
   const currentDate = format(new Date(), "yyyy-MM-dd");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!firstname || !lastname || !phonenumber) {
-      setFormError("please fill all records");
+    if (!firstname || !lastname || !phonenumber || !availableday) {
+      setFormError("Please fill all fields");
       return;
     }
-    const { data, error } = await SupabaseAdmin.from("available_dates")
+
+    const { data: bookedDates, error } = await SupabaseAdmin.from(
+      "available_dates"
+    )
+      .select()
+      .eq("availableday", availableday);
+
+    if (error) {
+      console.error("Error checking booked dates:", error);
+      setFormError("An error occurred. Please try again later.");
+      return;
+    }
+
+    if (bookedDates && bookedDates.length > 0) {
+      setFormError(
+        "The selected date is already booked. Please choose another date."
+      );
+      return;
+    }
+
+    const { data, error: insertError } = await SupabaseAdmin.from(
+      "available_dates"
+    )
       .insert([{ firstname, lastname, phonenumber, availableday }])
       .select();
-    if (error) {
-      console.log(error);
-      setFormError("please fill all data");
+
+    if (insertError) {
+      console.error("Error inserting booking:", insertError);
+      setFormError(
+        "An error occurred while processing your request. Please try again later."
+      );
+      return;
     }
+
     if (data) {
-      console.log("data", data);
-      alert("data send succesfuly");
+      console.log("Booking inserted successfully:", data);
+      alert("Booking successful!");
       setFormError(null);
       setLastname("");
       setPhonenumber("");
@@ -58,73 +85,12 @@ const page = () => {
               <div className="bg-light text-center rounded p-5">
                 <form onSubmit={handleSubmit}>
                   <div className="row g-3">
-                    {/* <div className="col-12 col-sm-6"> */}
-                    {/* <select
-                        className="form-select bg-white border-0"
-                        style={{ height: "55px" }}
-                      >
-                        <option selected>Тасаг</option>
-                        <option value="1">Мэдрэлийн тасаг</option>
-                        <option value="2">Уламжлалтын тасаг</option>
-                        <option value="3">Дотрын тасаг</option>
-                        <option value="4">VIP тасаг</option>
-                      </select> */}
-                    {/* </div> */}
-                    {/* <div className="col-12 col-sm-6"> */}
-                    {/* <select
-                        className="form-select bg-white border-0"
-                        style={{ height: "55px" }}
-                      >
-                        <option selected>Палат</option>
-                        <option value="1">1</option>
-                        <option value="2"> 2</option>
-                        <option value="3"> 3</option>
-                      </select> */}
-                    {/* </div> */}
-                    {/* <div className="col-12 col-sm-6">
+                    <div className="col-12 col-sm-6">
                       <input
-                        type="text"
                         name="firstName"
                         value={firstname}
                         onChange={(e) => setFirstname(e.target.value)}
-                        classNameName="form-control bg-white border-0"
                         placeholder="First Name"
-                        style={{ height: "55px" }}
-                      />
-                    </div>
-                    <div className="col-12 col-sm-6">
-                      <input
-                        type="text"
-                        name="lastname"
-                        value={lastname}
-                        onChange={(e) => setLastname(e.target.value)}
-                        classNameName="form-control bg-white border-0"
-                        placeholder="Last Name"
-                        style={{ height: "55px" }}
-                      />
-                    </div> */}
-                    {/* <div className="col-12 col-sm-6">
-                      <input
-                        type="register-id"
-                        className="form-control bg-white border-0"
-                        placeholder="Регистрийн дугар"
-                        style={{ height: "55px" }}
-                      />
-                    </div> */}
-                    {/* <div className="col-12 col-sm-6">
-                      <input
-                        type="email"
-                        className="form-control bg-white border-0"
-                        placeholder="Цахим шуудан"
-                        style={{ height: "55px" }}
-                      />
-                    </div> */}
-                    <div className="col-12 col-sm-6">
-                      <input
-                        name="firstName"
-                        value={firstname}
-                        onChange={(e) => setFirstname(e.target.value)}
-                        placeholder="First Nname"
                         className="form-control bg-white border-0"
                         style={{ height: "55px" }}
                       />
@@ -134,7 +100,7 @@ const page = () => {
                         name="lastName"
                         value={lastname}
                         onChange={(e) => setLastname(e.target.value)}
-                        placeholder="Last Nname"
+                        placeholder="Last Name"
                         className="form-control bg-white border-0"
                         style={{ height: "55px" }}
                       />
@@ -160,22 +126,7 @@ const page = () => {
                         style={{ height: "55px" }}
                       />
                     </div>
-                    <div className="col-12 col-sm-6">
-                      {/* <div
-                        className="date"
-                        id="date"
-                        data-target-input="nearest"
-                      >
-                        <input
-                          name="date"
-                          type="date"
-                          value={date}
-                          onChange={(e) => setDate(e.target.value)}
-                          classNameName="form-select bg-white border-0"
-                          style={{ height: "55px" }}
-                        />
-                      </div> */}
-                    </div>
+                    <div className="col-12 col-sm-6"></div>
 
                     <div className="col-12">
                       <button
