@@ -4,8 +4,9 @@ import Image from "next/image";
 import logo from "../app/images/nurli-logo.png";
 import { useEffect, useState } from "react";
 export const useClient = () => {};
-
+import { usePathname } from "next/navigation";
 const NavBar = () => {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
   // useEffect(() => {
@@ -42,13 +43,21 @@ const NavBar = () => {
             style={{ visibility: "visible" }}
           >
             <div className="navbar-nav ms-auto py-0">
-              <Link href="/" passHref className="nav-item nav-link active">
+              <Link
+                href="/"
+                passHref
+                className={`nav-item nav-link ${
+                  pathname === "/" ? "active" : ""
+                }`}
+              >
                 НҮҮР
               </Link>
               <div className="nav-item dropdown">
                 <a
                   passHref
-                  className="nav-link dropdown-toggle"
+                  className={`nav-link dropdown-toggle ${
+                    pathname === "/about" ? "active" : ""
+                  } `}
                   data-bs-toggle="dropdown"
                   onClick={toggleDropdown}
                   style={{ cursor: "pointer" }}
@@ -70,7 +79,9 @@ const NavBar = () => {
               <div className="nav-item dropdown">
                 <a
                   passHref
-                  className="nav-link dropdown-toggle"
+                  className={`nav-link dropdown-toggle ${
+                    pathname === "/blog" ? "active" : ""
+                  } `}
                   data-bs-toggle="dropdown"
                   onClick={toggleDropdown1}
                   style={{ cursor: "pointer" }}
@@ -92,14 +103,32 @@ const NavBar = () => {
                   </Link>
                 </div>
               </div>
-              <Link href="/appointment" passHref className="nav-item nav-link">
+              <Link
+                href="/appointment"
+                passHref
+                className={`nav-item nav-link ${
+                  pathname === "/appointment" ? "active" : ""
+                }`}
+              >
                 ЦАГ ЗАХИАЛГА
               </Link>
-              <Link href="/contact" passHref className="nav-item nav-link">
+              <Link
+                href="/contact"
+                passHref
+                className={`nav-item nav-link ${
+                  pathname === "/contact" ? "active" : ""
+                }`}
+              >
                 ХОЛБОО БАРИХ
               </Link>
               <Link href="/login" passHref>
-                <div className="nav-item nav-link">НЭВТРЭХ</div>
+                <div
+                  className={`nav-item nav-link ${
+                    pathname === "/login" ? "active" : ""
+                  }`}
+                >
+                  НЭВТРЭХ
+                </div>
               </Link>
             </div>
           </div>
