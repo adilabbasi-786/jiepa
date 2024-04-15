@@ -28,8 +28,10 @@ const Page = () => {
 
     if (!data) {
       throw new Error("User not found");
+      alert("invalid password or email!");
     }
     if (data.password !== password) {
+      alert("invalid password or email!");
       throw new Error("Incorrect password");
     }
     console.log("User authenticated:", data);
@@ -38,6 +40,8 @@ const Page = () => {
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error.message);
+      alert("invalid password or email!");
+
       setLoginError("Failed to login. Please try again later.");
     }
   };
