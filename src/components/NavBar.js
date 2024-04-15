@@ -9,6 +9,16 @@ const NavBar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const userLoggedIn = localStorage.getItem("isLoggedIn");
+    console.log("User logged in:", userLoggedIn);
+    setIsLoggedIn(userLoggedIn === "true");
+  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+  };
   // useEffect(() => {
   //   setIsOpen(false);
   //   setIsOpen1(false);
@@ -121,15 +131,23 @@ const NavBar = () => {
               >
                 ХОЛБОО БАРИХ
               </Link>
-              <Link href="/login" passHref>
-                <div
-                  className={`nav-item nav-link ${
-                    pathname === "/login" ? "active" : ""
-                  }`}
-                >
-                  НЭВТРЭХ
-                </div>
-              </Link>
+              {isLoggedIn ? (
+                // If user is logged in, show the Logout button
+                <Link href="/" passHref onClick={handleLogout}>
+                  <div className="nav-item nav-link">Logout</div>
+                </Link>
+              ) : (
+                // If user is not logged in, show the Sign Up button
+                <Link href="/signup" passHref>
+                  <div
+                    className={`nav-item nav-link ${
+                      pathname === "/signup" ? "active" : ""
+                    }`}
+                  >
+                    Sign Up
+                  </div>
+                </Link>
+              )}
             </div>
           </div>
         </nav>

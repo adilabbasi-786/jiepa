@@ -2,28 +2,38 @@
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import TopBar from "../../components/TopBar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SupabaseAdmin } from "../lib/supabase";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+
 const Page = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
-  const [availableday, setAvailableday] = useState("");
+  const [date, setDate] = useState("");
   const [formError, setFormError] = useState(null);
   const currentDate = format(new Date(), "yyyy-MM-dd");
+  const router = useRouter();
+  useEffect(() => {
+    // Retrieve user authentication status from local storage
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    // If user is not logged in, redirect to login page
+    if (!isLoggedIn) {
+      router.push("/login");
+    }
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!firstname || !lastname || !phonenumber || !availableday) {
+    if (!firstname || !lastname || !phonenumber || !date) {
       setFormError("Please fill all fields");
       return;
     }
 
-    const { data: bookedDates, error } = await SupabaseAdmin.from(
-      "available_dates"
-    )
+    const { data: bookedDates, error } = await SupabaseAdmin.from("books")
       .select()
-      .eq("availableday", availableday);
+      .eq("date", date);
 
     if (error) {
       console.error("Error checking booked dates:", error);
@@ -38,10 +48,8 @@ const Page = () => {
       return;
     }
 
-    const { data, error: insertError } = await SupabaseAdmin.from(
-      "available_dates"
-    )
-      .insert([{ firstname, lastname, phonenumber, availableday }])
+    const { data, error: insertError } = await SupabaseAdmin.from("books")
+      .insert([{ firstname, lastname, phonenumber, date }])
       .select();
 
     if (insertError) {
@@ -58,7 +66,7 @@ const Page = () => {
       setFormError(null);
       setLastname("");
       setPhonenumber("");
-      setAvailableday("");
+      setDate("");
       setFirstname("");
     }
   };
@@ -119,8 +127,8 @@ const Page = () => {
                       <input
                         type="date"
                         min={currentDate}
-                        value={availableday}
-                        onChange={(e) => setAvailableday(e.target.value)}
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
                         placeholder="Date for Booking"
                         className="form-control bg-white border-0"
                         style={{ height: "55px" }}
